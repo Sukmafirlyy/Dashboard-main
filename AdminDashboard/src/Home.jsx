@@ -174,7 +174,7 @@ function Home() {
       </div>
       <div className='line-chart'>
         <h3>Grafik kecepatan terhadap jarak</h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={200}>
           <LineChart
             data={distanceData}
             margin={{
@@ -187,8 +187,8 @@ function Home() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="distance" label={{ value: "Distance (km)", position: 'insideBottomRight', offset: 0 }} />
             <YAxis label={{ value: "speed (km/h)", angle: -90, position: 'insideLeft' }}
-              domain={[0, 350]}
-              ticks={[0, 50, 100, 150, 200, 250, 300, 350]}
+              domain={[0, 300]}
+              ticks={[0, 100, 200, 300]}
             />
             <Tooltip />
             <Legend />
