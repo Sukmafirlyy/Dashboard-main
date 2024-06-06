@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css'; // File CSS untuk styling
-import { MdOutlineSpeed, MdTrain, MdLocationOn } from 'react-icons/md';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ZAxis } from 'recharts';
 import GaugeComponent from 'react-gauge-component';
 import logo from './assets/Images/Logo-PT-INKA.png';
@@ -16,6 +15,16 @@ const gaugeLimits = [
   { limit: MAX_SPEED, color: '#EA4228', showTick: true },
 ];
 
+const staticSpeedData = [
+  { distance: 10, speed: 100 },
+  { distance: 20, speed: 85 },
+  { distance: 30, speed: 75 },
+  { distance: 40, speed: 65 },
+  { distance: 50, speed: 55 },
+  { distance: 60, speed: 0 },
+];
+
+
 function Home() {
   const [sensorData, setSensorData] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
@@ -26,8 +35,13 @@ function Home() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const navigate = useNavigate();
 
-  const kmhToMs = (value) => {
-    return { value: value.toFixed(2), unit: 'km/h' };
+   const kmhToMs = (value) => {
+    if (value >= 1) {
+      const msValue = value / 3.6;
+      return { value: msValue.toFixed(2), unit: 'm/s' };
+    } else {
+      return { value: value.toFixed(2), unit: 'km/h' };
+    }
   };
 
   useEffect(() => {
@@ -63,26 +77,21 @@ function Home() {
         if (prevTimestamp !== null) {
           const timeDiff = (newTimestamp - prevTimestamp) / 3600; // perbedaan waktu dalam jam
           const incrementalDistance = value * timeDiff; // jarak dalam kilometer
-          setTotalDistance(prevDistance => {
-            const updatedDistance = prevDistance + incrementalDistance;
-            return parseFloat(updatedDistance.toFixed(2)); // memastikan dua angka di belakang koma
-          });
-
-          const updatedDistanceData = newData.map((point, index) => ({
-            ...point,
-            distance: (index === 0 ? 0 : (totalDistance + incrementalDistance)).toFixed(2),
-          }));
-
+          const updatedDistanceData = [...distanceData, {  // Ubah dari setDistanceData menjadi [...distanceData,
+            distance: (distanceData.length === 0 ? 0 : distanceData[distanceData.length - 1].distance + incrementalDistance),
+            speed: value,
+          }].slice(-MAX_DATA_COUNT);
+  
           setDistanceData(updatedDistanceData);
         }
-
+  
         setPrevTimestamp(newTimestamp);
         return newData;
       });
-
+  
       setGaugeValue(value);
     });
-
+    
     return () => {
       socket.disconnect();
     };
@@ -91,7 +100,7 @@ function Home() {
   const lastSensorData = sensorData.length > 0 ? sensorData[sensorData.length - 1].speed : 0;
   const { value: convertedValue, unit: speedUnit } = kmhToMs(lastSensorData);
 
-  console.log('distanceData:', distanceData);
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -116,7 +125,7 @@ function Home() {
           labels={{
             valueLabel: {
               fontSize: 40,
-              formatTextValue: value => `${value.toFixed(2)} km/h`
+              formatTextValue: value => kmhToMs(value).value + ' ' + kmhToMs(value).unit
             }
           }}
           value={gaugeValue}
@@ -193,6 +202,15 @@ function Home() {
             <Tooltip />
             <Legend />
             <Line type="monotone" dataKey="speed" stroke="#8884d8" activeDot={{ r: 8 }} />
+            {distanceData.length > 0 && (
+              <Line
+                type="monotone"
+                dataKey="speed"
+                data={staticSpeedData.map(point => ({ distance: point.distance, speed: point.speed }))}
+                stroke="red"
+                strokeDasharray="5 5"
+              />
+            )}
           </LineChart>
         </ResponsiveContainer>
       </div>

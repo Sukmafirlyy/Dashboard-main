@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -104,8 +105,8 @@ function rowContent(_index, row) {
 export default function HistoryPage() {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Box sx={{ flex: 1, padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}> {/*ini jarak header dan tabel*/}
-                <Paper sx={{ height: 'calc(100vh - 8rem)', width: '90%', overflow: 'hidden', marginBottom: '2rem' }}>
+            <Box sx={{ flex: 1, padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}> {/*ini jarak header dan tabel*/}
+                <Paper sx={{ height: 'calc(100vh - 8rem)', width: '90%', overflow: 'hidden', marginBottom: '0.5rem', marginTop: '0.5rem' }}>
                     <TableVirtuoso
                         data={rows}
                         components={VirtuosoTableComponents}
@@ -113,6 +114,11 @@ export default function HistoryPage() {
                         itemContent={rowContent}
                     />
                 </Paper>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+                <Link to='/'>
+                    <button className="back-button">Back to Home</button>
+                </Link>
             </Box>
         </Box>
     );

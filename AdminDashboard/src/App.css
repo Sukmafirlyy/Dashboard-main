@@ -176,3 +176,24 @@ h3 {
   align-self: flex-start; /* Menyelaraskan judul ke bagian atas */
   padding: 0 14px;
 }
+
+/* App.css */
+.back-button {
+  background-color: #3a3c3d; /* Hijau */
+  border: none;
+  color: white;
+  padding: 10px 17px;
+  text-align: start;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px; /* Membuat sudut tombol melengkung */
+  transition: background-color 0.3s ease; /* Transisi untuk efek hover */
+}
+
+.back-button:hover {
+  background-color: #0056b3; /* Warna saat tombol dihover */
+}
+
