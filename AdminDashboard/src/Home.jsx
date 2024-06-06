@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css'; // File CSS untuk styling
 import { MdOutlineSpeed, MdTrain, MdLocationOn } from 'react-icons/md';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ZAxis } from 'recharts';
@@ -23,6 +24,7 @@ function Home() {
   const [totalDistance, setTotalDistance] = useState(0);
   const [prevTimestamp, setPrevTimestamp] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
+  const navigate = useNavigate();
 
   const kmhToMs = (value) => {
     return { value: value.toFixed(2), unit: 'km/h' };
@@ -167,8 +169,7 @@ function Home() {
         </div>
         {/* Card 1 */}
         <div className='button'>
-          <button onClick={() => alert('Navigasi ke halaman history')}>History</button>
-          <button onClick={() => alert('Navigasi ke halaman setting')}>Setting</button>
+          <button onClick={() => navigate('/history')}>History</button>
         </div>
       </div>
       <div className='line-chart'>
