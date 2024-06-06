@@ -3,6 +3,7 @@ import './App.css'; // File CSS untuk styling
 import { MdOutlineSpeed, MdTrain, MdLocationOn } from 'react-icons/md';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ZAxis } from 'recharts';
 import GaugeComponent from 'react-gauge-component';
+import logo from './assets/Images/Logo-PT-INKA.png';
 import io from 'socket.io-client';
 
 const MAX_DATA_COUNT = 20;
@@ -21,6 +22,7 @@ function Home() {
   const [distanceData, setDistanceData] = useState([]);
   const [totalDistance, setTotalDistance] = useState(0);
   const [prevTimestamp, setPrevTimestamp] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
 
   const kmhToMs = (value) => {
     return { value: value.toFixed(2), unit: 'km/h' };
@@ -87,7 +89,15 @@ function Home() {
   const lastSensorData = sensorData.length > 0 ? sensorData[sensorData.length - 1].speed : 0;
   const { value: convertedValue, unit: speedUnit } = kmhToMs(lastSensorData);
 
-  //console.log('distanceData:', distanceData);
+  console.log('distanceData:', distanceData);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleString());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <main className='main-container'>
@@ -142,8 +152,24 @@ function Home() {
           {/*<small className="text-muted">Posisi Kereta</small>*/}
         </div>
       </div>
-      <div className='button'>
-        <button onClick={() => alert('Navigasi ke halaman history')}>Go to History</button>
+      <div className='button-container'>
+        {/* Card 2 */}
+        <div className='company'>
+          <div className="d-flex align-items-center">
+            <img src={logo} alt="PT.Inka" className="company-logo" />
+          </div>
+        </div>
+        {/* Card 3 */}
+        <div className='info-card'>
+          <div className="d-flex align-items-center">
+            <h2>{currentTime}</h2>
+          </div>
+        </div>
+        {/* Card 1 */}
+        <div className='button'>
+          <button onClick={() => alert('Navigasi ke halaman history')}>History</button>
+          <button onClick={() => alert('Navigasi ke halaman setting')}>Setting</button>
+        </div>
       </div>
       <div className='line-chart'>
         <h3>Grafik kecepatan terhadap jarak</h3>
@@ -153,7 +179,7 @@ function Home() {
             margin={{
               top: 5,
               right: 30,
-              left: 5,
+              left: 10,
               bottom: 9,
             }}
           >
